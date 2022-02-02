@@ -71,7 +71,7 @@ class SETMatchGame: ObservableObject {
     }
     
     @ViewBuilder func SETCardContentView (card: Card) -> some View {
-        let symbol = Diamond()
+        let symbol = Squiggle()
         
         VStack {
             ForEach(0..<card.content.symbolCount) { _ in
