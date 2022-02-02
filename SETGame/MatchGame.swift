@@ -17,7 +17,7 @@ struct MatchGame<CardContent> {
         }
     }
     
-    struct Card {
+    struct Card: Identifiable {
         var isMatched = false
         var isSelected = false
         let content: CardContent

@@ -11,11 +11,15 @@ struct AspectVGrid<Item, ItemView>: View where Item: Identifiable, ItemView: Vie
     var items: [Item]
     var aspectRatio: CGFloat
     var content: (Item) -> ItemView
+    var minimumColumns: Int = 1
     
     var body: some View {
         VStack {
             GeometryReader { geometry in
-                let width: CGFloat = widthThatFits(itemCount: items.count, in: geometry.size, itemAspectRatio: aspectRatio)
+                let width: CGFloat = widthThatFits(itemCount: items.count,
+                                                   in: geometry.size,
+                                                   itemAspectRatio: aspectRatio,
+                                                   minimumColumns: minimumColumns)
                 LazyVGrid(columns: [adaptiveGridItem(width: width)], spacing: 0) {
                     ForEach(items) { item in
                         content(item).aspectRatio(aspectRatio, contentMode: .fit)
@@ -27,14 +31,16 @@ struct AspectVGrid<Item, ItemView>: View where Item: Identifiable, ItemView: Vie
     }
 }
 
+// Factored this logic out to clean up the body var
 private func adaptiveGridItem(width: CGFloat) -> GridItem {
     var gridItem = GridItem(.adaptive(minimum: width))
     gridItem.spacing = 0
     return gridItem
 }
 
-private func widthThatFits(itemCount: Int, in size: CGSize, itemAspectRatio: CGFloat) -> CGFloat {
-    var columnCount = 1
+// Find the maximum width that allows the Items to all fit in the provided space while maintaining the aspect ratio
+private func widthThatFits(itemCount: Int, in size: CGSize, itemAspectRatio: CGFloat, minimumColumns: Int) -> CGFloat {
+    var columnCount = minimumColumns
     var rowCount = itemCount
     repeat {
         let itemWidth = size.width / CGFloat(columnCount)

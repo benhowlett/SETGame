@@ -36,6 +36,15 @@ class SETMatchGame: ObservableObject {
     
     @Published private var model: MatchGame<SETCardContent> = createSETGame()
     
+    // MARK: - Intents
+    func getCards(count: Int) -> [Card] {
+        var count = count
+        if count > model.cards.count {
+            count = model.cards.count
+        }
+        return Array(model.cards[0..<count])
+    }
+    
     // MARK: - SET Card Content
     struct SETCardContent {
         let symbolType: SymbolType
