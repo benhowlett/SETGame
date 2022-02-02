@@ -41,7 +41,7 @@ private func adaptiveGridItem(width: CGFloat) -> GridItem {
 // Find the maximum width that allows the Items to all fit in the provided space while maintaining the aspect ratio
 private func widthThatFits(itemCount: Int, in size: CGSize, itemAspectRatio: CGFloat, minimumColumns: Int) -> CGFloat {
     var columnCount = minimumColumns
-    var rowCount = itemCount
+    var rowCount = (itemCount + (columnCount - 1)) / columnCount
     repeat {
         let itemWidth = size.width / CGFloat(columnCount)
         let itemHeight = itemWidth / itemAspectRatio

@@ -28,7 +28,6 @@ class SETMatchGame: ObservableObject {
         return SETDeck.shuffled()
     }
     
-    //
     static func createSETGame() -> MatchGame<SETCardContent> {
         let cards = createSETDeck()
         return MatchGame<SETCardContent>(cards: cards)
@@ -69,5 +68,15 @@ class SETMatchGame: ObservableObject {
         case green
         case purple
         case red
+    }
+    
+    @ViewBuilder func SETCardContentView (card: Card) -> some View {
+        let symbol = Diamond()
+        
+        VStack {
+            ForEach(0..<card.content.symbolCount) { _ in
+                symbol
+            }
+        }.padding(8)
     }
 }

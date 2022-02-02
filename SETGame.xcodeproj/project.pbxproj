@@ -13,6 +13,7 @@
 		B529893227A9CF4100EBC4B4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B529893127A9CF4100EBC4B4 /* Preview Assets.xcassets */; };
 		B54401AC27A9E91B00C9779B /* MatchGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54401AB27A9E91A00C9779B /* MatchGame.swift */; };
 		B54401AE27A9EBAF00C9779B /* SETMatchGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54401AD27A9EBAF00C9779B /* SETMatchGame.swift */; };
+		B54401B027AAF8D800C9779B /* Diamond.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54401AF27AAF8D800C9779B /* Diamond.swift */; };
 		B55CB37A27A9E0120074E9E7 /* AspectVGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = B55CB37927A9E0120074E9E7 /* AspectVGrid.swift */; };
 /* End PBXBuildFile section */
 
@@ -24,6 +25,7 @@
 		B529893127A9CF4100EBC4B4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		B54401AB27A9E91A00C9779B /* MatchGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchGame.swift; sourceTree = "<group>"; };
 		B54401AD27A9EBAF00C9779B /* SETMatchGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SETMatchGame.swift; sourceTree = "<group>"; };
+		B54401AF27AAF8D800C9779B /* Diamond.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Diamond.swift; sourceTree = "<group>"; };
 		B55CB37927A9E0120074E9E7 /* AspectVGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspectVGrid.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -62,6 +64,7 @@
 				B54401AB27A9E91A00C9779B /* MatchGame.swift */,
 				B54401AD27A9EBAF00C9779B /* SETMatchGame.swift */,
 				B55CB37927A9E0120074E9E7 /* AspectVGrid.swift */,
+				B54401AF27AAF8D800C9779B /* Diamond.swift */,
 				B529892E27A9CF4100EBC4B4 /* Assets.xcassets */,
 				B529893027A9CF4100EBC4B4 /* Preview Content */,
 			);
@@ -146,6 +149,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B54401B027AAF8D800C9779B /* Diamond.swift in Sources */,
 				B529892D27A9CF4000EBC4B4 /* SETMatchGameView.swift in Sources */,
 				B54401AC27A9E91B00C9779B /* MatchGame.swift in Sources */,
 				B529892B27A9CF4000EBC4B4 /* SETGameApp.swift in Sources */,

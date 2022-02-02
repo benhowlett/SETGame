@@ -11,8 +11,8 @@ struct SETMatchGameView: View {
     @ObservedObject var game: SETMatchGame
     
     var body: some View {
-        AspectVGrid(items: game.getCards(count: 3), aspectRatio: 2/3, content: { card in
-            CardView(card: card).padding(4)
+        AspectVGrid(items: game.getCards(count: 6), aspectRatio: 2/3, content: { card in
+            CardView(card: card, game: game).padding(4)
         }, minimumColumns: 3)
         
     }
@@ -20,16 +20,17 @@ struct SETMatchGameView: View {
 
 struct CardView: View {
     let card: MatchGame<SETMatchGame.SETCardContent>.Card
+    let game: SETMatchGame
     
     var body: some View {
         ZStack {
             let shape = RoundedRectangle(cornerRadius: 10)
             shape.fill().foregroundColor(.white)
             shape.strokeBorder(lineWidth: 5)
+            game.SETCardContentView(card: card)
         }
     }
 }
-
 
 
 struct ContentView_Previews: PreviewProvider {
