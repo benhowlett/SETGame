@@ -11,9 +11,12 @@ struct SETMatchGameView: View {
     @ObservedObject var game: SETMatchGame
     
     var body: some View {
-        AspectVGrid(items: game.getCards(count: 6), aspectRatio: 2/3, content: { card in
+        AspectVGrid(items: game.getCards(count: 18), aspectRatio: 2/3, content: { card in
             CardView(card: card, game: game).padding(4)
-        }, minimumColumns: 3)
+                .onTapGesture {
+                    game.chose(card)
+                }
+        }, minimumColumns: 3).padding(4)
         
     }
 }
@@ -23,12 +26,12 @@ struct CardView: View {
     let game: SETMatchGame
     
     var body: some View {
-        ZStack {
-            let shape = RoundedRectangle(cornerRadius: 10)
-            shape.fill().foregroundColor(.white)
-            shape.strokeBorder(lineWidth: 5)
-            game.SETCardContentView(card: card)
-        }
+       ZStack {
+           let shape = RoundedRectangle(cornerRadius: 10)
+           shape.fill().foregroundColor(.white)
+           shape.strokeBorder(card.isSelected ? .yellow : .blue, lineWidth: 4)
+           game.SETCardContentView(card: card)
+       }
     }
 }
 
@@ -38,6 +41,9 @@ struct ContentView_Previews: PreviewProvider {
         let game = SETMatchGame()
         
         SETMatchGameView(game: game)
+            .previewDevice("iPhone 13 mini")
+        SETMatchGameView(game: game)
+            .preferredColorScheme(.dark)
             .previewDevice("iPhone 13 mini")
     }
 }

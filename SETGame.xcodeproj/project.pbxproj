@@ -15,6 +15,7 @@
 		B54401AE27A9EBAF00C9779B /* SETMatchGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54401AD27A9EBAF00C9779B /* SETMatchGame.swift */; };
 		B54401B027AAF8D800C9779B /* Diamond.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54401AF27AAF8D800C9779B /* Diamond.swift */; };
 		B54401B227AB10F500C9779B /* Squiggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54401B127AB10F500C9779B /* Squiggle.swift */; };
+		B54401B427AB30DA00C9779B /* Oval.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54401B327AB30DA00C9779B /* Oval.swift */; };
 		B55CB37A27A9E0120074E9E7 /* AspectVGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = B55CB37927A9E0120074E9E7 /* AspectVGrid.swift */; };
 /* End PBXBuildFile section */
 
@@ -28,6 +29,7 @@
 		B54401AD27A9EBAF00C9779B /* SETMatchGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SETMatchGame.swift; sourceTree = "<group>"; };
 		B54401AF27AAF8D800C9779B /* Diamond.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Diamond.swift; sourceTree = "<group>"; };
 		B54401B127AB10F500C9779B /* Squiggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Squiggle.swift; sourceTree = "<group>"; };
+		B54401B327AB30DA00C9779B /* Oval.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Oval.swift; sourceTree = "<group>"; };
 		B55CB37927A9E0120074E9E7 /* AspectVGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspectVGrid.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -65,6 +67,7 @@
 				B529892C27A9CF4000EBC4B4 /* SETMatchGameView.swift */,
 				B54401AB27A9E91A00C9779B /* MatchGame.swift */,
 				B54401AD27A9EBAF00C9779B /* SETMatchGame.swift */,
+				B54401B327AB30DA00C9779B /* Oval.swift */,
 				B54401B127AB10F500C9779B /* Squiggle.swift */,
 				B55CB37927A9E0120074E9E7 /* AspectVGrid.swift */,
 				B54401AF27AAF8D800C9779B /* Diamond.swift */,
@@ -159,6 +162,7 @@
 				B529892B27A9CF4000EBC4B4 /* SETGameApp.swift in Sources */,
 				B55CB37A27A9E0120074E9E7 /* AspectVGrid.swift in Sources */,
 				B54401AE27A9EBAF00C9779B /* SETMatchGame.swift in Sources */,
+				B54401B427AB30DA00C9779B /* Oval.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
