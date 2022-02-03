@@ -28,24 +28,24 @@ class SETMatchGame: ObservableObject {
         return SETDeck.shuffled()
     }
     
-    static func createSETGame() -> MatchGame<SETCardContent> {
+    static func createSETMatchGame() -> MatchGame<SETCardContent> {
         let cards = createSETDeck()
-        return MatchGame<SETCardContent>(cards: cards)
+        return MatchGame<SETCardContent>(cards: cards, activeCardCount: 12)
     }
     
-    @Published private var model: MatchGame<SETCardContent> = createSETGame()
+    @Published private var model: MatchGame<SETCardContent> = createSETMatchGame()
     
     // MARK: - Intents
-    func getCards(count: Int) -> [Card] {
-        var count = count
-        if count > model.cards.count {
-            count = model.cards.count
-        }
-        return Array(model.cards[0..<count])
+    var cards: Array<Card> {
+        Array(model.cards[0..<model.activeCardCount])
     }
     
     func chose(_ card: Card) {
         model.choose(card)
+    }
+    
+    func dealCards() {
+        model.dealCards()
     }
     
     // MARK: - SET Card Content
@@ -74,40 +74,4 @@ class SETMatchGame: ObservableObject {
         case red
     }
     
-    @ViewBuilder func SETCardContentView (card: Card) -> some View {
-        VStack {
-            if card.content.symbolFill == .open {
-                ForEach(0..<card.content.symbolCount) { _ in
-                    switch card.content.symbolType {
-                    case .oval: Oval().stroke(style: StrokeStyle(lineWidth: 4, lineCap: .round, lineJoin: .round)).scale(0.9)
-                    case .diamond: Diamond().stroke(style: StrokeStyle(lineWidth: 4, lineCap: .round, lineJoin: .round)).scale(0.9)
-                    case .squiggle: Squiggle().stroke(style: StrokeStyle(lineWidth: 4, lineCap: .round, lineJoin: .round)).scale(0.9)
-                    }
-                }
-            } else {
-                ForEach(0..<card.content.symbolCount) { _ in
-                    switch card.content.symbolType {
-                    case .oval: Oval()
-                    case .diamond: Diamond()
-                    case .squiggle: Squiggle()
-                    }
-                }
-            }
-        }
-        .padding(8)
-        .foregroundColor({ () -> Color in
-            switch card.content.color {
-                case .green: return Color.green
-                case .purple: return Color.purple
-                case .red: return Color.red
-            }
-        }())
-        .opacity({() -> Double in
-            if card.content.symbolFill == .striped {
-                return 0.3
-            } else {
-                return 1
-            }
-        }())
-    }
 }
