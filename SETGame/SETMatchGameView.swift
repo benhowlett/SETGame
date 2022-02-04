@@ -19,23 +19,48 @@ struct SETMatchGameView: View {
                         game.chose(card)
                     }
             }, minimumColumns: 3).padding(.horizontal, 4)
-            Button {
-                game.dealCards()
-            } label: {
-                Text("Deal Cards").font(.title)
+            Spacer()
+            HStack {
+                Button {
+                    game.newGame()
+                } label: {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 10)//.foregroundColor(.blue)
+                        Text("New Game").font(.title).foregroundColor(.white)
+                    }
+                }
+                Spacer()
+                Button {
+                    game.dealCards()
+                } label: {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 10)//.foregroundColor(.blue)
+                        Text("Deal Cards").font(.title).foregroundColor(.white)
+                    }
+                }
             }
+            .padding(.horizontal)
+            .frame(height: 60)
         }
     }
 }
 
 struct CardView: View {
-    let card: MatchGame<SETMatchGame.SETCardContent>.Card
+    typealias Card = MatchGame<SETMatchGame.SETCardContent>.Card
+    let card: Card
     
     var body: some View {
        ZStack {
            let shape = RoundedRectangle(cornerRadius: 10)
            shape.fill().foregroundColor(.white)
-           shape.strokeBorder(card.isSelected ? .yellow : .blue, lineWidth: 4)
+           shape.strokeBorder({(_ card: Card) -> Color in
+               switch card.cardState {
+               case .none: return Color.blue
+               case .isMatched: return Color.green
+               case .isSelected: return Color.yellow
+               case .isNotMatched: return Color.red
+               }
+           }(card), lineWidth: 4)
            SETCardContentView(card: card)
        }
     }

@@ -35,17 +35,21 @@ class SETMatchGame: ObservableObject {
     
     @Published private var model: MatchGame<SETCardContent> = createSETMatchGame()
     
-    // MARK: - Intents
     var cards: Array<Card> {
         Array(model.cards[0..<model.activeCardCount])
     }
     
+    // MARK: - Intents
     func chose(_ card: Card) {
         model.choose(card)
     }
     
     func dealCards() {
         model.dealCards()
+    }
+    
+    func newGame() {
+        model = SETMatchGame.createSETMatchGame()
     }
     
     // MARK: - SET Card Content
