@@ -60,20 +60,20 @@ class SETMatchGame: ObservableObject {
         let symbolFill: FillType
     }
     
-    enum SymbolType: CaseIterable {
-        case diamond
+    enum SymbolType: Int, CaseIterable {
+        case diamond = 0
         case squiggle
         case oval
     }
     
-    enum FillType: CaseIterable {
-        case solid
+    enum FillType: Int, CaseIterable {
+        case solid = 0
         case open
         case striped
     }
     
-    enum CardColor: CaseIterable {
-        case green
+    enum CardColor: Int, CaseIterable {
+        case green = 0
         case purple
         case red
     }
