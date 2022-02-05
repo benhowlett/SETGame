@@ -11,19 +11,20 @@ struct MatchGame<CardContent> {
     private(set) var cards: [Card]
     private(set) var activeCardCount: Int
     private var selectedCardIndices: [Int] = []
+    private var cardsRemoved = false
     
     mutating func choose(_ card: Card) {
         if let chosenIndex = cards.firstIndex(where: { $0.id == card.id })
         {
-            var cardsRemoved = false
             // Clear previous selections when a 4th card is selected
             if selectedCardIndices.count >= 3 {
                 for index in 0..<cards.count {
                     if cards[index].cardState != .isMatched {
                         cards[index].cardState = .none
                     }
-                    selectedCardIndices = []
                 }
+                selectedCardIndices = []
+                removeMatchedCards()
             }
             
             // Only add a selected card to the list of selected cards if it wasn't already selected
@@ -33,13 +34,13 @@ struct MatchGame<CardContent> {
             
             // When 3 cards are selected, check for a match
             if selectedCardIndices.count == 3 {
-                if selectedCardsMatch() {
+                if selectedCardsMatch(selectedCardIndices) {
                     for index in 0..<selectedCardIndices.count {
                         cards[selectedCardIndices[index]].cardState = .isMatched
                     }
                 } else {
                     for index in 0..<selectedCardIndices.count {
-                        cards[selectedCardIndices[index]].cardState = .isNotMatched
+                        cards[selectedCardIndices[index]].cardState = .none
                     }
                 }
             } else {
@@ -51,28 +52,7 @@ struct MatchGame<CardContent> {
                 } else {
                     cards[chosenIndex].cardState = .isSelected
                 }
-                
-                // Remove matched cards from the deck
-                for card in cards {
-                    if let index = cards.firstIndex(where: { $0.id == card.id }), card.cardState == .isMatched {
-                        cards.remove(at: index)
-                        while activeCardCount > cards.count {
-                            activeCardCount -= 1
-                        }
-                        cardsRemoved = true
-                    }
-                }
-                
-                // Update the index of the remaining selected card
-                if cardsRemoved {
-                    for card in cards {
-                        if let index = cards.firstIndex(where: { $0.id == card.id }), card.cardState == .isSelected {
-                            selectedCardIndices[0] = index
-                        }
-                    }
-                }
             }
-            print("\(selectedCardIndices)")
         }
     }
     
@@ -82,21 +62,43 @@ struct MatchGame<CardContent> {
     }
     
     mutating func dealCards() {
-        if activeCardCount <= cards.count - 3 {
+        if selectedCardIndices.count == 3, selectedCardsMatch(selectedCardIndices) {
+            removeMatchedCards()
+        }
+        else if activeCardCount <= cards.count - 3 {
             activeCardCount += 3
         }
     }
     
-    // Logic to check if the cards match. Really tried to make this game-independant, but I'm not sure how well it would work with another set of rules
-    private func selectedCardsMatch() -> Bool {
+    // Check the cards at the selectedCardIndices to see if they match
+    mutating func removeMatchedCards() {
+        for card in cards {
+            if let index = cards.firstIndex(where: { $0.id == card.id }), card.cardState == .isMatched {
+                if cards.count > activeCardCount {
+                    let newCard = cards.remove(at: activeCardCount)
+                    cards.insert(newCard, at: index)
+                    cards.remove(at: index + 1)
+                } else {
+                    cards.remove(at: index)
+                }
+                while activeCardCount > cards.count {
+                    activeCardCount -= 1
+                }
+                cardsRemoved = true
+            }
+        }
+    }
+    
+    // Logic to check if the cards match. Tried to make this game-independant, but I'm not sure how well it would work with another set of rules
+    private func selectedCardsMatch(_ cardIndices: [Int]) -> Bool {
         var cardContentStrings: [[String]] = []
         for _ in 0..<("\(cards[0].content)".components(separatedBy: ",").count) {
             cardContentStrings.append([])
         }
         
         var contentMatches = true
-        for index in 0..<selectedCardIndices.count {
-            let cardContent: [String] = "\(cards[selectedCardIndices[index]].content)".components(separatedBy: ",")
+        for index in 0..<cardIndices.count {
+            let cardContent: [String] = "\(cards[cardIndices[index]].content)".components(separatedBy: ",")
             for index in 0..<cardContent.count {
                 cardContentStrings[index].append(cardContent[index])
             }
@@ -104,28 +106,23 @@ struct MatchGame<CardContent> {
         
         for contentStrings in cardContentStrings {
             for content in contentStrings {
-                print("\(content): \(contentStrings.filter({$0 == content}).count)")
                 if contentStrings.filter({$0 == content}).count == 2 {
                     contentMatches = false
                 }
             }
         }
-        print("\(contentMatches)")
         return contentMatches
     }
             
     struct Card: Identifiable {
-//        var isMatched = false
-//        var isSelected = false
         var cardState: CardState = .none
         let content: CardContent
         let id: Int
     }
     
-    enum CardState: CaseIterable {
+    enum CardState {
         case none
         case isSelected
         case isMatched
-        case isNotMatched
     }
 }
