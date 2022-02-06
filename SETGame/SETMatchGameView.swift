@@ -29,12 +29,17 @@ struct SETMatchGameView: View {
     
     var gameBody: some View {
         AspectVGrid(items: game.cards, aspectRatio: DrawingConstants.cardAspectRatio, content: { card in
-            CardView(card: card).padding(DrawingConstants.cardPadding)
+            CardView(card: card)
+                .padding(DrawingConstants.cardPadding)
+                .transition(AnyTransition.scale)
+                .scaleEffect(card.cardState == .isMatched ? 1.05 : 1)
+                .animation(.easeInOut, value: card.cardState)
                 .onTapGesture {
                     game.chose(card)
                 }
         }, minimumColumns: DrawingConstants.minCardColumns)
         .padding(.horizontal, DrawingConstants.cardPadding)
+        
     }
     
     var newGame: some View {
@@ -81,6 +86,7 @@ struct CardView: View {
                }
            }(card), lineWidth: DrawingConstants.cardStrokeWidth)
            SETCardContentView(card: card)
+               
        }
     }
     
