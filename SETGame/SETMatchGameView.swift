@@ -13,34 +13,46 @@ struct SETMatchGameView: View {
     var body: some View {
         VStack {
             Text("SET!").font(.title)
-            AspectVGrid(items: game.cards, aspectRatio: 2/3, content: { card in
-                CardView(card: card).padding(4)
-                    .onTapGesture {
-                        game.chose(card)
-                    }
-            }, minimumColumns: 3).padding(.horizontal, 4)
+            gameBody
             Spacer()
-            HStack {
-                Button {
-                    game.newGame()
-                } label: {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 10)//.foregroundColor(.blue)
-                        Text("New Game").font(.title).foregroundColor(.white)
-                    }
-                }
-                Spacer()
-                Button {
-                    game.dealCards()
-                } label: {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 10)//.foregroundColor(.blue)
-                        Text("Deal Cards").font(.title).foregroundColor(.white)
-                    }
+            VStack {
+                Text("Score: \(game.getScore())")
+                HStack {
+                    newGame
+                    Spacer()
+                    dealCards
                 }
             }
             .padding(.horizontal)
-            .frame(height: 60)
+        }
+    }
+    
+    var gameBody: some View {
+        AspectVGrid(items: game.cards, aspectRatio: 2/3, content: { card in
+            CardView(card: card).padding(4)
+                .onTapGesture {
+                    game.chose(card)
+                }
+        }, minimumColumns: 3).padding(.horizontal, 4)
+    }
+    
+    var newGame: some View {
+        Button {
+            withAnimation {
+                game.newGame()
+            }
+        } label: {
+            Text("New Game").font(.title)
+        }
+    }
+    
+    var dealCards: some View {
+        Button {
+            withAnimation {
+                game.dealCards()                
+            }
+        } label: {
+            Text("Deal Cards").font(.title)
         }
     }
 }
@@ -48,7 +60,7 @@ struct SETMatchGameView: View {
 struct CardView: View {
     typealias Card = MatchGame<SETMatchGame.SETCardContent>.Card
     let card: Card
-    
+
     var body: some View {
        ZStack {
            let shape = RoundedRectangle(cornerRadius: 10)
@@ -67,16 +79,14 @@ struct CardView: View {
     
     @ViewBuilder func SETCardContentView (card: SETMatchGame.Card) -> some View {
         VStack {
-            if card.content.symbolFill == .open {
-                ForEach(0..<card.content.symbolCount) { _ in
+            ForEach(0..<card.content.symbolCount, id: \.self) { _ in
+                if card.content.symbolFill == .open {
                     switch card.content.symbolType {
                     case .oval: Oval().stroke(style: StrokeStyle(lineWidth: 4, lineCap: .round, lineJoin: .round)).scale(0.9)
                     case .diamond: Diamond().stroke(style: StrokeStyle(lineWidth: 4, lineCap: .round, lineJoin: .round)).scale(0.9)
                     case .squiggle: Squiggle().stroke(style: StrokeStyle(lineWidth: 4, lineCap: .round, lineJoin: .round)).scale(0.9)
                     }
-                }
-            } else {
-                ForEach(0..<card.content.symbolCount) { _ in
+                } else {
                     switch card.content.symbolType {
                     case .oval: Oval()
                     case .diamond: Diamond()

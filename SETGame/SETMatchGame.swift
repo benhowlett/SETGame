@@ -9,10 +9,20 @@ import SwiftUI
 
 class SETMatchGame: ObservableObject {
     typealias Card = MatchGame<SETCardContent>.Card
+    static var SETDeck: [Card] = []
+
+    @Published private var model: MatchGame<SETCardContent> = createSETMatchGame()
+    
+    static func createSETMatchGame() -> MatchGame<SETCardContent> {
+        if SETDeck.isEmpty {
+            SETDeck = createSETDeck()
+        }
+        return MatchGame<SETCardContent>(cards: SETDeck.shuffled(), activeCardCount: 12)
+    }
     
     // Create a deck of 81 SET cards. Is there a better way than nested for loops?
     static func createSETDeck() -> [Card] {
-        var SETDeck: [Card] = []
+        var deck: [Card] = []
         SymbolType.allCases.forEach {
             let symbol = $0
             for symbolCount in 1...3 {
@@ -20,20 +30,16 @@ class SETMatchGame: ObservableObject {
                     let fill = $0
                     CardColor.allCases.forEach {
                         let color = $0
-                        SETDeck.append(Card(content: SETCardContent(symbolType: symbol, symbolCount: symbolCount, color: color, symbolFill: fill), id: SETDeck.count * 2))
+                        deck.append(Card(cardState: .none, content: SETCardContent(symbolType: symbol, symbolCount: symbolCount, color: color, symbolFill: fill)))
                     }
                 }
             }
         }
-        return SETDeck.shuffled()
+        SETDeck.forEach({
+            print("\($0.id)")
+        })
+        return deck
     }
-    
-    static func createSETMatchGame() -> MatchGame<SETCardContent> {
-        let cards = createSETDeck()
-        return MatchGame<SETCardContent>(cards: cards, activeCardCount: 12)
-    }
-    
-    @Published private var model: MatchGame<SETCardContent> = createSETMatchGame()
     
     var cards: Array<Card> {
         Array(model.cards[0..<model.activeCardCount])
@@ -50,6 +56,10 @@ class SETMatchGame: ObservableObject {
     
     func newGame() {
         model = SETMatchGame.createSETMatchGame()
+    }
+    
+    func getScore() -> Int {
+        model.score
     }
     
     // MARK: - SET Card Content

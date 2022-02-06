@@ -13,6 +13,7 @@ struct MatchGame<CardContent> {
     private var selectedCardIndices: [Int] = []
     private var cardsRemoved = false
     private var existingMatches: [[Int]] = []
+    private(set) var score = 0
     
     mutating func choose(_ card: Card) {
         if let chosenIndex = cards.firstIndex(where: { $0.id == card.id })
@@ -40,10 +41,12 @@ struct MatchGame<CardContent> {
                     for index in 0..<selectedCardIndices.count {
                         cards[selectedCardIndices[index]].cardState = .isMatched
                     }
+                    score += 1
                 } else {
                     for index in 0..<selectedCardIndices.count {
                         cards[selectedCardIndices[index]].cardState = .isNotMatched
                     }
+                    score -= 1
                 }
             } else {
                 if cards[chosenIndex].cardState == .isSelected {
@@ -69,6 +72,9 @@ struct MatchGame<CardContent> {
             removeMatchedCards()
         }
         else if activeCardCount <= cards.count - 3 {
+            if !existingMatches.isEmpty {
+                score -= 1
+            }
             activeCardCount += 3
         }
         findExistingMatches()
@@ -76,7 +82,6 @@ struct MatchGame<CardContent> {
     
     // Check the cards at the selectedCardIndices to see if they match
     mutating func removeMatchedCards() {
-        //print("\(cards[0..<activeCardCount])")
         for card in cards {
             if let index = cards.firstIndex(where: { $0.id == card.id }), card.cardState == .isMatched {
                 if cards.count > activeCardCount {
@@ -90,7 +95,6 @@ struct MatchGame<CardContent> {
                     activeCardCount -= 1
                 }
                 cardsRemoved = true
-                //print("\(cards[0..<activeCardCount])")
             }
         }
     }
@@ -122,9 +126,9 @@ struct MatchGame<CardContent> {
     
     private mutating func findExistingMatches() {
         existingMatches = []
-        for firstIndex in 0..<activeCardCount {
-            for secondIndex in 0..<activeCardCount {
-                for thirdIndex in 0..<activeCardCount {
+        for firstIndex in 0..<activeCardCount - 2 {
+            for secondIndex in firstIndex + 1..<activeCardCount - 1 {
+                for thirdIndex in secondIndex + 1..<activeCardCount {
                     if thirdIndex != firstIndex, thirdIndex != secondIndex {
                         if cardsMatch([firstIndex, secondIndex, thirdIndex]) {
                             existingMatches.append([firstIndex, secondIndex, thirdIndex].sorted())
@@ -151,7 +155,7 @@ struct MatchGame<CardContent> {
     struct Card: Identifiable {
         var cardState: CardState = .none
         let content: CardContent
-        let id: Int
+        let id = UUID()
     }
     
     enum CardState {
