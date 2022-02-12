@@ -17,7 +17,7 @@ class SETMatchGame: ObservableObject {
         if SETDeck.isEmpty {
             SETDeck = createSETDeck()
         }
-        return MatchGame<SETCardContent>(cards: SETDeck.shuffled(), activeCardCount: 12)
+        return MatchGame<SETCardContent>(cards: SETDeck.shuffled())
     }
     
     // Create a deck of 81 SET cards. Is there a better way than nested for loops?
@@ -41,8 +41,12 @@ class SETMatchGame: ObservableObject {
         return deck
     }
     
-    var cards: Array<Card> {
+    var activeCards: Array<Card> {
         Array(model.cards[0..<model.activeCardCount])
+    }
+    
+    var allCards: Array<Card> {
+        model.cards
     }
     
     // MARK: - Intents
@@ -60,6 +64,18 @@ class SETMatchGame: ObservableObject {
     
     func getScore() -> Int {
         model.score
+    }
+    
+    func flipCard(_ card: Card) {
+        model.flipCard(card)
+    }
+    
+    func isFirstDeal() -> Bool {
+        model.isFirstDeal
+    }
+    
+    func markFirstDealDone() {
+        model.markFirstDealDone()
     }
     
     // MARK: - SET Card Content

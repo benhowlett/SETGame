@@ -9,24 +9,28 @@ import Foundation
 
 struct MatchGame<CardContent> {
     private(set) var cards: [Card]
-    private(set) var activeCardCount: Int
+    private(set) var activeCardCount: Int = 12
     private var selectedCardIndices: [Int] = []
     private var cardsRemoved = false
     private var existingMatches: [[Int]] = []
     private(set) var score = 0
+    private(set) var isFirstDeal = true
+    private(set) var dealt = Set<UUID>()
+   
     
     mutating func choose(_ card: Card) {
         if let chosenIndex = cards.firstIndex(where: { $0.id == card.id })
         {
             // Clear previous selections when a 4th card is selected
-            if selectedCardIndices.count >= 3 {
+            if selectedCardIndices.count == 3 {
+                removeMatchedCards()
                 for index in 0..<cards.count {
                     if cards[index].cardState != .isMatched {
                         cards[index].cardState = .none
                     }
                 }
                 selectedCardIndices = []
-                removeMatchedCards()
+                //removeMatchedCards()
                 findExistingMatches()
             }
             
@@ -61,10 +65,8 @@ struct MatchGame<CardContent> {
         }
     }
     
-    init(cards: [Card], activeCardCount: Int) {
+    init(cards: [Card]) {
         self.cards = cards
-        self.activeCardCount = activeCardCount
-        findExistingMatches()
     }
     
     mutating func dealCards() {
@@ -99,6 +101,18 @@ struct MatchGame<CardContent> {
         }
     }
     
+    mutating func flipCard(_ card: Card) {
+        if let chosenIndex = cards.firstIndex(where: { $0.id == card.id }) {
+            cards[chosenIndex].isFaceUp = true
+        }
+    }
+    
+    mutating func markFirstDealDone() {
+        if isFirstDeal {
+            isFirstDeal = false
+        }
+    }
+    
     // Logic to check if the cards match. Tried to make this game-independant, but I'm not sure how well it would work with another set of rules
     private func cardsMatch(_ cardIndices: [Int]) -> Bool {
         var cardContentStrings: [[String]] = []
@@ -125,13 +139,15 @@ struct MatchGame<CardContent> {
     }
     
     private mutating func findExistingMatches() {
-        existingMatches = []
-        for firstIndex in 0..<activeCardCount - 2 {
-            for secondIndex in firstIndex + 1..<activeCardCount - 1 {
-                for thirdIndex in secondIndex + 1..<activeCardCount {
-                    if thirdIndex != firstIndex, thirdIndex != secondIndex {
-                        if cardsMatch([firstIndex, secondIndex, thirdIndex]) {
-                            existingMatches.append([firstIndex, secondIndex, thirdIndex].sorted())
+        if cards.count > 3 {
+            existingMatches = []
+            for firstIndex in 0..<activeCardCount - 2 {
+                for secondIndex in firstIndex + 1..<activeCardCount - 1 {
+                    for thirdIndex in secondIndex + 1..<activeCardCount {
+                        if thirdIndex != firstIndex, thirdIndex != secondIndex {
+                            if cardsMatch([firstIndex, secondIndex, thirdIndex]) {
+                                existingMatches.append([firstIndex, secondIndex, thirdIndex].sorted())
+                            }
                         }
                     }
                 }
@@ -154,6 +170,7 @@ struct MatchGame<CardContent> {
     
     struct Card: Identifiable {
         var cardState: CardState = .none
+        var isFaceUp: Bool = false
         let content: CardContent
         let id = UUID()
     }
